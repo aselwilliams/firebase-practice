@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {createUserWithEmailAndPassword, onAuthStateChanged, signOut} from 'firebase/auth';
+import {createUserWithEmailAndPassword, onAuthStateChanged,signInWithEmailAndPassword, signOut} from 'firebase/auth';
 import {auth} from './firebase-config'
 import './App.css';
 
@@ -27,7 +27,16 @@ function App() {
     }
   }
   const login= async ()=>{
-
+    try{
+      const user= await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPwd
+      )
+      console.log(user)
+    } catch(error){
+      console.log(error.message)
+    }
   }
   const logout= async ()=>{
     await signOut(auth)
@@ -44,10 +53,10 @@ function App() {
 
       <div className='flex'>
         <h3>Login</h3>
-        <input placeholder='Email...'/>
-        <input placeholder='Password...'/>
+        <input placeholder='Email...' onChange={(e)=>setLoginEmail(e.target.value)}/>
+        <input placeholder='Password...' onChange={(e)=>setLoginPwd(e.target.value)}/>
 
-        <button>Login</button>
+        <button onClick={login}>Login</button>
       </div>
 
 
