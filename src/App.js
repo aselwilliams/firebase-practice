@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {createUserWithEmailAndPassword, onAuthStateChanged, signOut} from 'firebase/auth';
 import {auth} from './firebase-config'
 import './App.css';
 
@@ -8,6 +8,11 @@ function App() {
   const [registerPwd, setRegisterPwd]=useState('')
   const [loginEmail, setLoginEmail]=useState('')
   const [loginPwd, setLoginPwd]=useState('')
+  const [user,setUser]=useState({})
+
+  onAuthStateChanged(auth,(currentUser)=>{
+   setUser(currentUser) 
+  })
 
   const register= async ()=>{
     try{
@@ -25,7 +30,7 @@ function App() {
 
   }
   const logout= async ()=>{
-
+    await signOut(auth)
   }
   return (
     <div className="App">
@@ -48,8 +53,9 @@ function App() {
 
       <div className='flex'>
       <h4>User Logged In: </h4>
+      {user?.email}
 
-      <button>Sign Out</button>
+      <button onClick={logout}>Sign Out</button>
       </div>
     </div>
   );
